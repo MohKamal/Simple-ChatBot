@@ -5,6 +5,8 @@ from keras.optimizers import SGD
 import random
 
 import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 import json
