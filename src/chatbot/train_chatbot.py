@@ -17,7 +17,7 @@ words=[]
 classes = []
 documents = []
 ignore_letters = ['!', '?', ',', '.']
-intents_file = open('intents_db.json').read()
+intents_file = open('intents.json').read()
 intents = json.loads(intents_file)
 startTime = str(datetime.now())
 intentCount = 0
@@ -25,6 +25,7 @@ tagsCount = 0
 
 
 for intent in intents['intents']:
+    print("Current Tag: {}".format(intent['tag']))
     for pattern in intent['patterns']:
         #tokenize each word
         word = nltk.word_tokenize(pattern)
@@ -34,10 +35,9 @@ for intent in intents['intents']:
         # add to our classes list
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
-    print("Processing\nCurrent Tag: {}".format(intent['tag']))
     tagsCount += 1
     intentCount += 1
-    if tagsCount % 1000 == 0:
+    if tagsCount % 2 == 0:
         print("Intent Count: {}\nTags Count: {}\nStart time: {}\nTime: {}".format(intentCount, tagsCount, startTime, str(datetime.now())))
 # print(documents)
 # lemmaztize and lower each word and remove duplicates
@@ -48,9 +48,9 @@ classes = sorted(list(set(classes)))
 # documents = combination between patterns and intents
 print (len(documents), "documents")
 # classes = intents
-print (len(classes), "classes", classes)
+#print (len(classes), "classes", classes)
 # words = all words, vocabulary
-print (len(words), "unique lemmatized words", words)
+#print (len(words), "unique lemmatized words", words)
 
 pickle.dump(words,open('words.pkl','wb'))
 pickle.dump(classes,open('classes.pkl','wb'))

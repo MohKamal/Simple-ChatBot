@@ -1,8 +1,8 @@
 $(document).ready(function() {
-    //Sending default hi
-    sendRequest('Hi');
     //init var
     var sending = false;
+    //Sending default hi
+    sendRequest('Hi');
     //Sending event for the user
     $("#human_message").on('keyup', function(e) {
         if (e.keyCode === 13) {
