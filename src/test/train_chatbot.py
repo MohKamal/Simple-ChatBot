@@ -3,10 +3,11 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD
 import random
+from datetime import datetime
 
 import nltk
-nltk.download('punkt')
-nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('wordnet')
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 import json
@@ -16,8 +17,12 @@ words=[]
 classes = []
 documents = []
 ignore_letters = ['!', '?', ',', '.']
-intents_file = open('intents.json').read()
+intents_file = open('intents_db.json').read()
 intents = json.loads(intents_file)
+startTime = str(datetime.now())
+intentCount = 0
+tagsCount = 0
+
 
 for intent in intents['intents']:
     for pattern in intent['patterns']:
@@ -29,7 +34,12 @@ for intent in intents['intents']:
         # add to our classes list
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
-print(documents)
+    print("Processing\nCurrent Tag: {}".format(intent['tag']))
+    tagsCount += 1
+    intentCount += 1
+    if tagsCount % 1000 == 0:
+        print("Intent Count: {}\nTags Count: {}\nStart time: {}\nTime: {}".format(intentCount, tagsCount, startTime, str(datetime.now())))
+# print(documents)
 # lemmaztize and lower each word and remove duplicates
 words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_letters]
 words = sorted(list(set(words)))
@@ -45,6 +55,7 @@ print (len(words), "unique lemmatized words", words)
 pickle.dump(words,open('words.pkl','wb'))
 pickle.dump(classes,open('classes.pkl','wb'))
 
+trainingCount = 0
 # create our training data
 training = []
 # create an empty array for our output
@@ -66,6 +77,9 @@ for doc in documents:
     output_row[classes.index(doc[1])] = 1
     
     training.append([bag, output_row])
+    trainingCount += 1
+    if trainingCount % 1000 == 0:
+        print("Training rows: {}\nStart Time: {}\nTime: {}".format(trainingCount, startTime, str(datetime.now())))
 # shuffle our features and turn into np.array
 random.shuffle(training)
 training = np.array(training)

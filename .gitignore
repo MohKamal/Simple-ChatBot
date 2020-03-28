@@ -131,3 +131,4 @@ src/data/2015-01
 src/test/from_json_to_sqlite/2015-01.db
 src/chatbot/2015-01.db
 src/data/2015-01
+src/test/intents_db.json
